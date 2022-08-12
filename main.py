@@ -33,41 +33,28 @@ def shutdown(signum, frame):
 signal.signal(signal.SIGTERM, shutdown)
 signal.signal(signal.SIGINT, shutdown)
 
-# Dictionary keyed on Meter ID that holds the last 
-# reading that caused a post to the MQTT broker.
+# Dictionary keyed on Meter ID that holds the timestamp of the last reading.
+# Initialize to timestamp of 0 for every requested meter ID.
 last_reads = {}
+for meter_id in settings.METER_IDS:
+    last_reads[meter_id] = 0
 
 def get_last(meter_id):
-    """Returns a (ts, val) tuple for Meter ID 'meter_id'.  If that 
-    Meter ID is not present (None, None) is returned.
+    """Returns the last reading timestamp for Meter ID 'meter_id'.
     """
-    return last_reads.get(meter_id, (None, None))
+    return last_reads[meter_id]
 
-def set_last(meter_id, ts, val):
+def set_last(meter_id, ts):
     """Sets the last meter reading for Meter ID 'meter_id'.
     The attributes stored are the timestamp 'ts' and the
     value 'val'.
     """
-    last_reads[meter_id] = (ts, val)
+    last_reads[meter_id] = ts
 
 # start the rtlamr program.
-rtlamr = subprocess.Popen(['/home/pi/gocode/bin/rtlamr', 
+rtlamr = subprocess.Popen(['/home/pi/go/bin/rtlamr', 
     '-gainbyindex=24',   # index 24 was found to be the most sensitive
     '-format=csv'], stdout=subprocess.PIPE, text=True)
-
-
-# Map of Commodity IDs to Meter Type
-commod_map = {
-    2: 'Gas',
-    4: 'Elec',
-    5: 'Elec',
-    7: 'Elec',
-    8: 'Elec',
-    9: 'Gas',
-    11: 'Water',
-    12: 'Gas',
-    13: 'Water',
-}
 
 while True:
 
@@ -79,44 +66,25 @@ while True:
             # valid readings have nine fields
             continue
 
-        # Make a reading received file. This is used to determine whether the gas
-        # reader is working or not.
-        with open('/var/run/last_gas', 'w') as read_file:
-            read_file.write('reading received')
-
-        # If the list of Meter IDs to record is not empty, make sure this ID
-        # is in the list of IDs to record.
+        # make sure this ID is in the list of IDs to record.
         meter_id = int(flds[3])
-        if len(settings.METER_IDS) and meter_id not in settings.METER_IDS:
+        if meter_id not in last_reads:
             continue
 
         ts_cur = time.time()
         read_cur = float(flds[7])
 
-        # Determine the type of meter and the multiplier from the Commodity
-        # Type in the message.
-        commod_type = int(flds[4])    # Commodity type number
-        commod = commod_map.get(commod_type, 'Elec')
+        logging.debug('%s %s %s %s' % (ts_cur, meter_id, read_cur))
 
-        logging.debug('%s %s %s %s' % (ts_cur, meter_id, read_cur, commod_type))
-
-
-        ts_last, read_last = get_last(meter_id)
-        if ts_last is None:
-            set_last(meter_id, ts_cur, read_cur)
-            logging.info('First read for Meter # %s: %s' % (meter_id, read_cur))
+        ts_last = get_last(meter_id)
 
         if ts_cur > ts_last + settings.METER_POST_INTERVAL * 60.0:
-            # enough time has elapsed to make a post.  calculate the
-            # rate of meter reading change per hour.
-            rate = (read_cur - read_last) * 3600.0 * multiplier / (ts_cur - ts_last)
-            
-            # time stamp in the middle of the reading period
+            # enough time has elapsed to make a post.
             ts_post = int((ts_cur + ts_last) / 2.0)
             post_str = f'{ts_post}\t{settings.LOGGER_ID}_{commod_type:02d}_{meter_id}\t{rate}'
             logging.debug(f'meter_reader MQTT post: {post_str}')
 
-            set_last(meter_id, ts_cur, read_cur)
+            set_last(meter_id, ts_cur)
 
     except:
         logging.exception('Error processing reading %s' % line)
