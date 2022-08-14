@@ -25,7 +25,6 @@ def shutdown(signum, frame):
     '''Kills the external processes that were started by this script
     '''
     # Hard kill these processes and I have found them difficult to kill with SIGTERM
-    subprocess.call('/usr/bin/pkill rtl_tcp', shell=True)
     subprocess.call('/usr/bin/pkill run_meter_reader', shell=True)
     subprocess.call('/usr/bin/pkill --signal 9 rtlamr', shell=True)
     subprocess.call('/usr/bin/pkill --signal 9 rtl_tcp', shell=True)
