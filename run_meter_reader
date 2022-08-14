@@ -1,0 +1,14 @@
+#!/bin/bash
+# This scripts starts and restarts, if necessary, the meter_reader.py program.
+
+# Need to start the rtl_tcp program
+./run_rtl_tcp &
+
+# Give rtl_tcp time to start up before starting rtlamr.  Without wating
+# rtlamr start-up was not reliable
+sleep 5
+
+until env/bin/python main.py; do
+    echo "Server 'main.py' crashed with exit code $?.  Respawning.." >&2
+    sleep 2
+done

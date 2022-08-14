@@ -13,6 +13,9 @@ import subprocess
 import signal
 import time
 import logging
+from pathlib import Path
+
+from e5lora import Board
 
 logging.warning('meter_reader has restarted')
 
@@ -22,12 +25,12 @@ def shutdown(signum, frame):
     '''Kills the external processes that were started by this script
     '''
     # Hard kill these processes and I have found them difficult to kill with SIGTERM
-    subprocess.call('/usr/bin/pkill -f "/bin/bash /home/pi/amr-to-lora/run_rtl_tcp"', shell=True)
-    subprocess.call('/usr/bin/pkill -f "/bin/bash /home/pi/amr-to-lora/run_meter_reader"', shell=True)
+    subprocess.call('/usr/bin/pkill rtl_tcp', shell=True)
+    subprocess.call('/usr/bin/pkill run_meter_reader', shell=True)
     subprocess.call('/usr/bin/pkill --signal 9 rtlamr', shell=True)
     subprocess.call('/usr/bin/pkill --signal 9 rtl_tcp', shell=True)
     # Also found that I need to hard kill this process as well (suicide)
-    subprocess.call('/usr/bin/pkill --signal 9 -f "python3 /home/pi/amr-to-lora/main.py"', shell=True)
+    subprocess.call('/usr/bin/pkill --signal 9 -f "env/bin/python main.py"', shell=True)
 
 # If process is being killed, go through shutdown process
 signal.signal(signal.SIGTERM, shutdown)
@@ -52,9 +55,13 @@ def set_last(meter_id, ts):
     last_reads[meter_id] = ts
 
 # start the rtlamr program.
-rtlamr = subprocess.Popen(['/home/pi/go/bin/rtlamr', 
+rtlamr = subprocess.Popen([
+    Path.home() / 'go/bin/rtlamr', 
     '-gainbyindex=24',   # index 24 was found to be the most sensitive
     '-format=csv'], stdout=subprocess.PIPE, text=True)
+
+# make object to use the E5 LoRaWAN board
+lora_board = Board(port=settings.E5_PORT)
 
 while True:
 
@@ -72,19 +79,25 @@ while True:
             continue
 
         ts_cur = time.time()
-        read_cur = float(flds[7])
+        read_cur = int(flds[7])
 
-        logging.debug('%s %s %s %s' % (ts_cur, meter_id, read_cur))
+        logging.debug('%s %s %s' % (ts_cur, meter_id, read_cur))
 
-        ts_last = get_last(meter_id)
+        ts_last = last_reads[meter_id]
 
         if ts_cur > ts_last + settings.METER_POST_INTERVAL * 60.0:
             # enough time has elapsed to make a post.
-            ts_post = int((ts_cur + ts_last) / 2.0)
-            post_str = f'{ts_post}\t{settings.LOGGER_ID}_{commod_type:02d}_{meter_id}\t{rate}'
-            logging.debug(f'meter_reader MQTT post: {post_str}')
+            # *** insert LoRaWAN post code here
+            print('transmit', int(ts_cur), meter_id, read_cur)
+            lora_board.send_uplink(
+                [
+                    (4, 1),             # reading type: id with value
+                    (meter_id, 5),      # id
+                    (read_cur, 4)       # value
+                ]
+            )
 
-            set_last(meter_id, ts_cur)
+            last_reads[meter_id] = ts_cur
 
     except:
         logging.exception('Error processing reading %s' % line)
