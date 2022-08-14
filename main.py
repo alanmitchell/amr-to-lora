@@ -41,18 +41,6 @@ last_reads = {}
 for meter_id in settings.METER_IDS:
     last_reads[meter_id] = 0
 
-def get_last(meter_id):
-    """Returns the last reading timestamp for Meter ID 'meter_id'.
-    """
-    return last_reads[meter_id]
-
-def set_last(meter_id, ts):
-    """Sets the last meter reading for Meter ID 'meter_id'.
-    The attributes stored are the timestamp 'ts' and the
-    value 'val'.
-    """
-    last_reads[meter_id] = ts
-
 # start the rtlamr program.
 rtlamr = subprocess.Popen([
     Path.home() / 'go/bin/rtlamr', 
