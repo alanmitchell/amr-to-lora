@@ -34,11 +34,9 @@ echo "------------------------------------------------"
 echo "-- Blacklisting Certain RTL-SDR drivers       --"
 echo "------------------------------------------------"
 
-sudo touch /etc/modprobe.d/blacklist-rtl.conf
-
-sudo echo "blacklist dvb_usb_rtl28xxu" >> /etc/modprobe.d/blacklist-rtl.conf
-sudo echo "blacklist rtl2832" >> /etc/modprobe.d/blacklist-rtl.conf
-sudo echo "blacklist rtl2830" >> /etc/modprobe.d/blacklist-rtl.conf
+echo "blacklist dvb_usb_rtl28xxu" | sudo tee /etc/modprobe.d/blacklist-rtl.conf
+echo "blacklist rtl2832" | sudo tee -a /etc/modprobe.d/blacklist-rtl.conf
+echo "blacklist rtl2830" | sudo tee -a /etc/modprobe.d/blacklist-rtl.conf
 
 echo "------------------------------------------------"
 echo "-- Installing RTLAMR Meter Reading script     --"
@@ -49,7 +47,6 @@ echo "------------------------------------------------"
 echo "-- Install the AMR to LoRa script          --"
 echo "------------------------------------------------"
 git clone https://github.com/alanmitchell/amr-to-lora.git
-
 
 echo "------------------------------------------------"
 echo "-- Now Reboot System and plug in RTL-SDR.     --"
