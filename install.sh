@@ -46,7 +46,8 @@ go get github.com/bemasher/rtlamr
 echo "------------------------------------------------"
 echo "-- Install the AMR to LoRa script          --"
 echo "------------------------------------------------"
-sudo git clone https://github.com/alanmitchell/amr-to-lora.git
+cd ../../
+git clone https://github.com/alanmitchell/amr-to-lora.git
 
 echo "------------------------------------------------"
 echo "-- Now Reboot System and plug in RTL-SDR.     --"
