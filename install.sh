@@ -48,6 +48,12 @@ echo "-- Install the AMR to LoRa script          --"
 echo "------------------------------------------------"
 cd ../../
 git clone https://github.com/alanmitchell/amr-to-lora.git
+cd amr-to-lora
+python3 -m venv env
+source env/bin/activate
+pip install -r requirements.txt
+deactivate
+cd ..
 
 echo "------------------------------------------------"
 echo "-- Now Reboot System and plug in RTL-SDR.     --"
