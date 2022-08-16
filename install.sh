@@ -3,7 +3,10 @@
 # Run this script from your Home directory.  Do not plug in the RTL-SDR dongle
 # until the script is complete.
 
-# Most of this script is copied from 
+# To run the script without having cloned the repo, execute:
+# curl https://raw.githubusercontent.com/alanmitchell/amr-to-lora/main/install.sh | bash
+
+# The portion of this script that installs the rtl-sdr package is mostly copied from:
 # https://gist.github.com/n8acl/dab196ce30e1e2139727cb7f76d300d6#file-rtlsdr-install-sh
 
 echo "-------------------------------------------"
