@@ -25,11 +25,11 @@ def shutdown(signum, frame):
     '''Kills the external processes that were started by this script
     '''
     # Hard kill these processes and I have found them difficult to kill with SIGTERM
-    subprocess.call('/usr/bin/pkill run_meter_reader', shell=True)
-    subprocess.call('/usr/bin/pkill --signal 9 rtlamr', shell=True)
-    subprocess.call('/usr/bin/pkill --signal 9 rtl_tcp', shell=True)
+    subprocess.run('/usr/bin/pkill --signal 9 rtlamr', shell=True)
+    subprocess.run('/usr/bin/pkill --signal 9 rtl_tcp', shell=True)
+
     # Also found that I need to hard kill this process as well (suicide)
-    subprocess.call('/usr/bin/pkill --signal 9 -f "env/bin/python main.py"', shell=True)
+    subprocess.run('/usr/bin/pkill --signal 9 -f "python main.py"', shell=True)
 
 # If process is being killed, go through shutdown process
 signal.signal(signal.SIGTERM, shutdown)
@@ -41,9 +41,11 @@ last_reads = {}
 for meter_id in settings.METER_IDS:
     last_reads[meter_id] = 0
 
-# start the rtlamr program.
+# start the rtl_tcp and rtlamr program.
+subprocess.run(f'{settings.RTL_TCP_PATH} &', shell=True)
+time.sleep(5)     # give time for rtl_tcp to start up for starting rtlamr
 rtlamr = subprocess.Popen([
-    Path.home() / 'go/bin/rtlamr', 
+    settings.RTLAMR_PATH, 
     '-gainbyindex=24',   # index 24 was found to be the most sensitive
     '-format=csv'], stdout=subprocess.PIPE, text=True)
 
@@ -59,7 +61,7 @@ while True:
         if len(flds) != 9:
             # valid readings have nine fields
             continue
-
+        
         # make sure this ID is in the list of IDs to record.
         meter_id = int(flds[3])
         if meter_id not in last_reads:
