@@ -26,3 +26,7 @@ Further configuration is then needed.
 * It is a good idea to automatically reboot your system to recover from unexpected software problems
   by adding a command to the crontab file similar to:
     * `0 4   *   *   *    /sbin/shutdown -r +1`
+
+The software would not be possible without the much more detailed work that went into the
+[rtl_tcp](https://www.rtl-sdr.com/) and [rtl_amr](https://github.com/bemasher/rtlamr) packages.
+Many thanks to the creators of those packages.
