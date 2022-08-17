@@ -1,5 +1,6 @@
 # amr-to-lora
-Application that relays AMR meter readings collected with an RTL-SDR dongle to a LoRaWAN network.
+Application that relays AMR meter readings collected with an RTL-SDR dongle to a LoRaWAN network
+through use of a [SEEED Studio LoRa E5 Mini module.](https://www.seeedstudio.com/LoRa-E5-mini-STM32WLE5JC-p-4869.html)
 
 The application can be installed on most systems running Linux, such as the Raspberry Pi.
 To perform the bulk of the installation, run the install.sh script, which will install
