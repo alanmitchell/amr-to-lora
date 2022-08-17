@@ -26,7 +26,11 @@ Further configuration is then needed.
     * `$HOME/amr-to-lora/env/bin/python $HOME/amr-to-lora/main.py &`
 * It is a good idea to automatically reboot your system to recover from unexpected software problems
   by adding a command to the crontab file similar to:
-    * `0 4   *   *   *    /sbin/shutdown -r +1`
+    * `0 4   *   *   *    sudo /sbin/shutdown -r +1`
+
+It is possible to change the LoRa datarate of the E5 board through a Downlink command.  Use Port 1 for
+the downlink and send a two-byte downlink:  the first byte is 0x01 and the second byte is the desired
+datarate.  For example, to change to Datarate 0, send 0x0100.  Valid datarates are 0, 1, 2, or 3.
 
 The software would not be possible without the much more detailed work that went into the
 [rtl_tcp](https://www.rtl-sdr.com/) and [rtlamr](https://github.com/bemasher/rtlamr) packages.

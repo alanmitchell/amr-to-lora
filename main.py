@@ -5,6 +5,7 @@ LoRaWAN network through a SEEED E5 module.
 This script assumes the RTL-SDR Software Defined Radio is based on R820T2 tuner and 
 RTL2832U chips.
 '''
+from concurrent.futures import process
 import subprocess
 import signal
 import time
@@ -15,6 +16,16 @@ from e5lora import Board
 logging.warning('meter_reader has restarted')
 
 import settings
+
+
+def process_downlink(down_data: bytes):
+    """Processes a downlink command sent to the LoRa E5 board.  'down_data' is a bytes
+    object containing the data sent in the downlink.
+    """
+    if down_data[0] == 1:         # request to change data rate
+        new_data_rate = down_data[1]
+        if new_data_rate in (0, 1, 2, 3):
+            lora_board.set_data_rate(new_data_rate) 
 
 def shutdown(signum, frame):
     '''Kills the external processes that were started by this script
@@ -30,6 +41,9 @@ def shutdown(signum, frame):
 signal.signal(signal.SIGTERM, shutdown)
 signal.signal(signal.SIGINT, shutdown)
 
+# make object to use the E5 LoRaWAN board
+lora_board = Board(port=settings.E5_PORT, downlink_callback=process_downlink)
+
 # Dictionary keyed on Meter ID that holds the timestamp of the last reading.
 # Initialize to timestamp of 0 for every requested meter ID.
 last_reads = {}
@@ -43,9 +57,6 @@ rtlamr = subprocess.Popen([
     settings.RTLAMR_PATH, 
     '-gainbyindex=24',   # index 24 was found to be the most sensitive
     '-format=csv'], stdout=subprocess.PIPE, text=True)
-
-# make object to use the E5 LoRaWAN board
-lora_board = Board(port=settings.E5_PORT)
 
 while True:
 
