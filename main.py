@@ -4,16 +4,11 @@ LoRaWAN network through a SEEED E5 module.
 
 This script assumes the RTL-SDR Software Defined Radio is based on R820T2 tuner and 
 RTL2832U chips.
-
-This script assumes that the program rtl_tcp is already running. (I tried starting
-it within this script, but it then captured keystrokes such as Ctrl-C.).
-
 '''
 import subprocess
 import signal
 import time
 import logging
-from pathlib import Path
 
 from e5lora import Board
 
@@ -76,11 +71,10 @@ while True:
 
         if ts_cur > ts_last + settings.METER_POST_INTERVAL * 60.0:
             # enough time has elapsed to make a post.
-            # *** insert LoRaWAN post code here
-            print('transmit', int(ts_cur), meter_id, read_cur)
+            print('transmitting:', int(ts_cur), meter_id, read_cur)
             lora_board.send_uplink(
                 [
-                    (4, 1),             # reading type: id with value
+                    (4, 1),             # message type: id with value
                     (meter_id, 5),      # id
                     (read_cur, 4)       # value
                 ]
