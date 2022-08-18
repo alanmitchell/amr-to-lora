@@ -1,0 +1,12 @@
+[Unit]
+Description=AMR Meter Reading to LoRaWAN script
+After=network.target
+
+[Service]
+ExecStart=/home/pi/amr-to-lora/env/bin/python /home/pi/amr-to-lora/main.py
+Restart=always
+RestartSec=15
+User=pi
+
+[Install]
+WantedBy=multi-user.target
