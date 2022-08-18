@@ -35,7 +35,9 @@ def shutdown(signum, frame):
     subprocess.run('/usr/bin/pkill --signal 9 rtl_tcp', shell=True)
 
     # Also found that I need to hard kill this process as well (suicide)
-    subprocess.run('/usr/bin/pkill --signal 9 -f "python main.py"', shell=True)
+    # Need to be a bit general about the path, as the program may have been started
+    # in various ways.
+    subprocess.run('/usr/bin/pkill --signal 9 -f env/bin/python', shell=True)
 
 # If process is being killed, go through shutdown process
 signal.signal(signal.SIGTERM, shutdown)
