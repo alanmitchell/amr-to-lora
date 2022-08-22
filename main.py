@@ -54,7 +54,8 @@ for meter_id in settings.METER_IDS:
 
 # start the rtl_tcp and rtlamr program.
 subprocess.run(f'{settings.RTL_TCP_PATH} &', shell=True)
-time.sleep(5)     # give time for rtl_tcp to start up for starting rtlamr
+# discovered that a delay of at least 30 seconds is required or rtl_tcp will disconnect rtlamr.
+time.sleep(45)     
 rtlamr = subprocess.Popen([
     settings.RTLAMR_PATH, 
     '-gainbyindex=24',   # index 24 was found to be the most sensitive
