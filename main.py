@@ -10,6 +10,7 @@ import subprocess
 import signal
 import time
 import logging
+import os
 
 from e5lora import Board
 
@@ -31,13 +32,18 @@ def shutdown(signum, frame):
     '''Kills the external processes that were started by this script
     '''
     # Hard kill these processes and I have found them difficult to kill with SIGTERM
-    subprocess.run('/usr/bin/pkill --signal 9 rtlamr', shell=True)
-    subprocess.run('/usr/bin/pkill --signal 9 rtl_tcp', shell=True)
+    try:
+        rtlamr.kill()
+    except:
+        pass
+    try:
+        rtl_tcp.kill()
+    except:
+        pass
 
     # Also found that I need to hard kill this process as well (suicide)
-    # Need to be a bit general about the path, as the program may have been started
-    # in various ways.
-    subprocess.run('/usr/bin/pkill --signal 9 -f env/bin/python', shell=True)
+    this_pid = os.getpid()
+    os.kill(this_pid, signal.SIGKILL)
 
 # If process is being killed, go through shutdown process
 signal.signal(signal.SIGTERM, shutdown)
@@ -53,9 +59,9 @@ for meter_id in settings.METER_IDS:
     last_reads[meter_id] = 0
 
 # start the rtl_tcp and rtlamr program.
-subprocess.run(f'{settings.RTL_TCP_PATH} &', shell=True)
+rtl_tcp = subprocess.Popen(settings.RTL_TCP_PATH)
 # discovered that a delay of at least 30 seconds is required or rtl_tcp will disconnect rtlamr.
-time.sleep(45)     
+time.sleep(47)     
 rtlamr = subprocess.Popen([
     settings.RTLAMR_PATH, 
     '-gainbyindex=24',   # index 24 was found to be the most sensitive
