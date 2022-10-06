@@ -13,6 +13,7 @@ echo "-------------------------------------------"
 echo "-- Installing needed packages from repos --"
 echo "-------------------------------------------"
 sudo apt-get install -y git cmake libffi-dev libssl-dev build-essential libusb-1.0-0-dev pkg-config golang
+sudo apt-get install python3-venv
 
 echo "------------------------------------------------"
 echo "-- Cloning rtl-sdr driver files from osmocom  --"
