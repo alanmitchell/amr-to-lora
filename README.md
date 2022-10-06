@@ -22,8 +22,9 @@ Further configuration is then needed.
     * `env/bin/python main.py`
 * If you want the script to automatically start when your system is booted, add the following
   command to a startup script file such as `/etc/rc.local` on the Raspberry Pi.  Or, you can add
-  the command to the crontab file with the @reboot directive:
-    * `$HOME/amr-to-lora/env/bin/python $HOME/amr-to-lora/main.py &`
+  the command to the crontab file with the @reboot directive. Use your actual path to the amr-to-lora
+  directory in this command:
+    * `/home/pi/amr-to-lora/env/bin/python /home/pi/amr-to-lora/main.py &`
 * It is a good idea to automatically reboot your system to recover from unexpected software problems
   by adding a command to the crontab file similar to:
     * `0 4   *   *   *    sudo /sbin/shutdown -r +1`
