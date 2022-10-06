@@ -8,7 +8,7 @@ METER_IDS = [38517635]
 METER_POST_INTERVAL = 10.0
 
 # If you are using slow processor, such as the Pi Zero, set the following to
-# True
+# True otherwise False.
 SLOW_CPU = False
 
 # Serial port where the SEEED E5 board is connected
