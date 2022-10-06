@@ -5,7 +5,6 @@ LoRaWAN network through a SEEED E5 module.
 This script assumes the RTL-SDR Software Defined Radio is based on R820T2 tuner and 
 RTL2832U chips.
 '''
-from concurrent.futures import process
 import subprocess
 import signal
 import time
