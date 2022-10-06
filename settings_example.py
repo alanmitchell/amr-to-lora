@@ -7,6 +7,10 @@ METER_IDS = [38517635]
 # Minimum number of minutes between posted meter readings
 METER_POST_INTERVAL = 10.0
 
+# If you are using slow processor, such as the Pi Zero, set the following to
+# True
+SLOW_CPU = False
+
 # Serial port where the SEEED E5 board is connected
 E5_PORT = '/dev/ttyUSB0'
 

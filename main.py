@@ -61,10 +61,14 @@ for meter_id in settings.METER_IDS:
 rtl_tcp = subprocess.Popen(settings.RTL_TCP_PATH)
 # discovered that a delay of at least 30 seconds is required or rtl_tcp will disconnect rtlamr.
 time.sleep(47)     
-rtlamr = subprocess.Popen([
-    settings.RTLAMR_PATH, 
+rtlamr = subprocess.Popen(
+    [settings.RTLAMR_PATH, 
     '-gainbyindex=24',   # index 24 was found to be the most sensitive
-    '-format=csv'], stdout=subprocess.PIPE, text=True)
+    '-format=csv',
+    '-symbollength=48' if settings.SLOW_CPU else '-symbollength=72'], 
+    stdout=subprocess.PIPE, 
+    text=True,
+    )
 
 while True:
 
