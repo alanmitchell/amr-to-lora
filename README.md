@@ -1,8 +1,15 @@
 # amr-to-lora
 Application that relays AMR meter readings collected with an RTL-SDR dongle to a LoRaWAN network
-through use of a [SEEED Studio LoRa E5 Mini module.](https://www.seeedstudio.com/LoRa-E5-mini-STM32WLE5JC-p-4869.html)
+through use of a [SEEED Studio LoRa E5 Mini module.](https://www.seeedstudio.com/LoRa-E5-mini-STM32WLE5JC-p-4869.html).
 
-The application can be installed on most systems running Linux, such as the Raspberry Pi.
+A ready-to-go [Raspberry Pi SD Image](https://analysisnorth.com/mini-monitor/amr-to-lora-2022-10-07.zip) is
+available for download.  This can be used to create a Raspberry Pi SD card that will automatically
+run the amr-to-lora program, after appropriate editing of the `settings.py` file in the /boot/amr
+directory on the card.  Select the "Use Custom" option in the "Operating System" drop-down of the
+Raspberry Pi Imager program to make the card. There is no need to unzip the image file, as the 
+Imager program can read a zip file.
+
+The application can be installed on most systems running Linux.
 To perform the bulk of the installation, run the install.sh script, which will install
 necessary Linux packages and clone this repository to the host machine.  Running the install.sh
 script can be accomplished by running the follwing at a Linux shell prompt from your $HOME 
@@ -21,9 +28,12 @@ Further configuration is then needed.  If you are installing on a Raspberry Pi:
 * Edit the `settings.py` file in \boot\amr to make appropriate settings. If you are running on 
   a Pi Zero, make sure SLOW_CPU is set to True.  For any CPU faster, use False and meter
   readings reception will be improved.
+* Reboot the Pi to have the changes take effect and the program should start collecting data.
+* Note that the above-mentioned Pi SD Card image has already completed these configuration steps;
+  the only necessary step is editing the settings.py file.
 
 If you are not installing on a Raspberry Pi, examine `pi_prep.sh` to determine the general
-nature of needed one-time configuration tasks and modify accordingly.  To simply start the meter
+nature of needed one-time configuration tasks and modify your system accordingly.  To simply start the meter
 reading program after having created a suitable `settings.py` file, change into the
 `$HOME/amr-to-lora` directory, make sure the RTL-SDR and SEEED E5 dongles are connected to USB
 ports and execute: `env/bin/python main.py`  
