@@ -1,0 +1,11 @@
+[Unit]
+Description=Start amr-to-lora (gas reader) program
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/home/pi/amr-to-lora/env/bin/python /home/pi/amr-to-lora/main.py
+User=pi
+
+[Install]
+WantedBy=multi-user.target
