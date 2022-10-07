@@ -10,24 +10,23 @@ directory:
 
     curl https://raw.githubusercontent.com/alanmitchell/amr-to-lora/main/install.sh | bash
 
-Further configuration is then needed.  
+Further configuration is then needed.  If you are installing on a Raspberry Pi:
 
-* Change into the $HOME/amr-to-lora directory.
-* Copy the `settings_example.py` file to `settings.py` and then edit the values in that file.
-    * Note that you can place the `settings.py` file in a more accessible location, such as in
-      in the `/boot` directory of the Raspberry Pi, but then you will need to symlink the file
-      back to the $HOME/amr-to-lora directory.
-* To run the meter collection script, change into the $HOME/amr-to-lora directory, make sure the
-  RTL-SDR dongle and the E5 LoRa Mini are plugged into USB ports, and run the following command:
-    * `env/bin/python main.py`
-* If you want the script to automatically start when your system is booted, add the following
-  command to a startup script file such as `/etc/rc.local` on the Raspberry Pi.  Or, you can add
-  the command to the crontab file with the @reboot directive. Use your actual path to the amr-to-lora
-  directory in this command:
-    * `/home/pi/amr-to-lora/env/bin/python /home/pi/amr-to-lora/main.py &`
-* It is a good idea to automatically reboot your system to recover from unexpected software problems
-  by adding a command to the crontab file similar to:
-    * `0 4   *   *   *    sudo /sbin/shutdown -r +1`
+* Change into the `$HOME/amr-to-lora` directory.
+* Examine the pi_prep.sh script, and if no conflicts are noted, run it: `./pi_prep.sh`
+    * This script makes the `settings.py` file easily editable with a PC by placing it
+      on the /boot partition in the `amr` subdirectory.
+    * The script adds a command to the pi crontab to reboot the system nightly.
+    * The script adds a systemd service to autostart the amr-to-lora program at system startup.
+* Edit the `settings.py` file in \boot\amr to make appropriate settings. If you are running on 
+  a Pi Zero, make sure SLOW_CPU is set to True.  For any CPU faster, use False and meter
+  readings reception will be improved.
+
+If you are not installing on a Raspberry Pi, examine `pi_prep.sh` to determine the general
+nature of needed one-time configuration tasks and modify accordingly.  To simply start the meter
+reading program after having created a suitable `settings.py` file, change into the
+`$HOME/amr-to-lora` directory, make sure the RTL-SDR and SEEED E5 dongles are connected to USB
+ports and execute: `env/bin/python main.py`  
 
 It is possible to change the LoRa datarate of the E5 board through a Downlink command.  Use Port 1 for
 the downlink and send a two-byte downlink:  the first byte is 0x01 and the second byte is the desired
