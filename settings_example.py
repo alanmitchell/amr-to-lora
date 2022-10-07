@@ -11,6 +11,10 @@ METER_POST_INTERVAL = 10.0
 # True otherwise False.
 SLOW_CPU = False
 
+#----------------------------------
+# Changes to the following settings are unlikely, unless you are not using a
+# Raspberry Pi.
+
 # Serial port where the SEEED E5 board is connected
 E5_PORT = '/dev/ttyUSB0'
 
