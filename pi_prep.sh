@@ -6,13 +6,13 @@
 # Make settings.py accessible on the /boot partition so that it can be easily
 # edited by a PC.  Link it back to its necessary location in the amr-to-lora
 # directory.
-sudo mkdir /boot/amr
-sudo cp settings_example.py /boot/amr/settings.py
-ln -s /boot/amr/settings.py settings.py
+sudo mkdir /boot/meter-reader
+sudo cp settings_example.py /boot/meter-reader/settings.py
+ln -s /boot/meter-reader/settings.py settings.py
 
 # Add cron command to reboot nightly
 crontab -l > cron_bak
-printf "\n0 4 * * * sudo /sbin/shutdown -r +1\n" >> cron_bak
+printf "\n0 4 * * * sudo shutdown -r +1\n" >> cron_bak
 crontab cron_bak
 rm cron_bak
 

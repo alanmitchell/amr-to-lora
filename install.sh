@@ -45,7 +45,7 @@ echo "blacklist rtl2830" | sudo tee -a /etc/modprobe.d/blacklist-rtl.conf
 echo "------------------------------------------------"
 echo "-- Installing RTLAMR Meter Reading script     --"
 echo "------------------------------------------------"
-go get github.com/bemasher/rtlamr
+go install github.com/bemasher/rtlamr@latest
 
 echo "------------------------------------------------"
 echo "-- Install the AMR to LoRa script          --"
