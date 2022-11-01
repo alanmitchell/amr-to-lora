@@ -65,7 +65,7 @@ rtlamr = subprocess.Popen(
     [settings.RTLAMR_PATH, 
     '-gainbyindex=24',   # index 24 was found to be the most sensitive
     '-format=csv',
-    '-symbollength=48' if settings.SLOW_CPU else '-symbollength=72'], 
+    '-symbollength=72'], 
     stdout=subprocess.PIPE, 
     text=True,
     )

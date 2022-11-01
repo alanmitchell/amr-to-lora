@@ -7,10 +7,6 @@ METER_IDS = [38517635]
 # Minimum number of minutes between posted meter readings
 METER_POST_INTERVAL = 10.0
 
-# If you are using slow processor, such as the Pi Zero, set the following to
-# True otherwise False.
-SLOW_CPU = False
-
 #----------------------------------
 # Changes to the following settings are unlikely, unless you are not using a
 # Raspberry Pi.
