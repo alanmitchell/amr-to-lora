@@ -95,6 +95,8 @@ while True:
         if ts_cur > ts_last + settings.METER_POST_INTERVAL * 60.0:
             # enough time has elapsed to make a post.
             print('transmitting:', int(ts_cur), meter_id, read_cur)
+            with open('last-post', 'w') as flast:
+                flast.write(f'{int(ts_cur)},{meter_id},{read_cur}\n')
             lora_board.send_uplink(
                 [
                     (4, 1),             # message type: id with value
