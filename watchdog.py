@@ -17,13 +17,19 @@ uptime = float( open('/proc/uptime').read().split()[0] )
 if uptime < TOO_LONG_TIME * 60.0 + 120:
     sys.exit()
 
+def reboot():
+    # save the current time so upon reboot it is sort-of accurate if there is no
+    # network connection.
+    subprocess.call('sudo fake-hwclock save', shell=True)
+    subprocess.call('sudo reboot now', shell=True)
+
 # filename of the file that gets updated when a meter read has occurred
 plast = Path(__file__).resolve().parent / 'last-post'
 
 # if no file present reboot
 if not plast.exists():
-    subprocess.call('sudo reboot now', shell=True)
+    reboot()
 
 # if the file is too old, reboot
 if time.time() - plast.stat().st_mtime > TOO_LONG_TIME * 60.0:
-    subprocess.call('sudo reboot now', shell=True)
+    reboot()
