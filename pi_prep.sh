@@ -12,7 +12,7 @@ ln -s /boot/meter-reader/settings.py settings.py
 
 # Add cron command to reboot nightly
 crontab -l > cron_bak
-printf "\n*/10 * * * * /home/pi/amr-to-lora/env/bin/python /home/pi/amr-to-lora/watchdog.py\n" >> cron_bak
+printf "\n*/5 * * * * /home/pi/amr-to-lora/env/bin/python /home/pi/amr-to-lora/watchdog.py\n" >> cron_bak
 crontab cron_bak
 rm cron_bak
 
