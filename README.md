@@ -2,12 +2,15 @@
 Application that relays AMR meter readings collected with an RTL-SDR dongle to a LoRaWAN network
 through use of a [SEEED Studio LoRa E5 Mini module.](https://www.seeedstudio.com/LoRa-E5-mini-STM32WLE5JC-p-4869.html).
 
-A ready-to-go [Raspberry Pi SD Image](https://analysisnorth.com/mini-monitor/amr-to-lora-2022-10-07.zip) is
-available for download.  This can be used to create a Raspberry Pi SD card that will automatically
-run the amr-to-lora program, after appropriate editing of the `settings.py` file in the /boot/amr
-directory on the card.  Select the "Use Custom" option in the "Operating System" drop-down of the
-Raspberry Pi Imager program to make the card. There is no need to unzip the image file, as the 
-Imager program can read a zip file.
+A ready-to-go [Raspberry Pi SD Card Image](https://analysisnorth.com/mini-monitor/amr-to-lora-2022-11-02.img.xz) is
+available for download. This can be used to create a Raspberry Pi SD card that will automatically
+run the amr-to-lora program, after appropriate editing of the `settings.py` file in the /boot/meter-reader
+directory on the card.  This image will work on a Raspberry Pi 3 or 4 computer, and will also
+work on a [Libre AML-S905X-CC Le Potato](https://libre.computer/products/s905x/) computer.
+
+Select the "Use Custom" option in the "Operating System" drop-down of the
+[Raspberry Pi Imager](https://www.raspberrypi.com/software/) program to make the SD card. There is no
+need to decompress the image file, as the Imager program can read an xz compressed file.
 
 The application can be installed on most systems running Linux.
 To perform the bulk of the installation, run the install.sh script, which will install
@@ -22,13 +25,12 @@ Further configuration is then needed.  If you are installing on a Raspberry Pi:
 * Change into the `$HOME/amr-to-lora` directory.
 * Examine the pi_prep.sh script, and if no conflicts are noted, run it: `./pi_prep.sh`
     * This script makes the `settings.py` file easily editable with a PC by placing it
-      on the /boot partition in the `amr` subdirectory.
+      on the /boot partition in the `meter-reader` subdirectory.
     * The script adds a command to the pi crontab to reboot the system nightly.
     * The script adds a systemd service to autostart the amr-to-lora program at system startup.
-* Edit the `settings.py` file in \boot\amr to make appropriate settings. If you are running on 
-  a Pi Zero, make sure SLOW_CPU is set to True.  For any CPU faster, use False and meter
-  readings reception will be improved.
-* Reboot the Pi to have the changes take effect and the program should start collecting data.
+* Edit the `settings.py` file in \boot\meter-reader to make appropriate settings. 
+* Reboot the Pi to have the changes take effect, make sure the RTL-SDR and
+SEEED LoRa-E5 dongles are connected, and the program should start collecting data.
 * Note that the above-mentioned Pi SD Card image has already completed these configuration steps;
   the only necessary step is editing the settings.py file.
 
