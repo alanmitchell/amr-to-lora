@@ -10,11 +10,11 @@ sudo mkdir /boot/meter-reader
 sudo cp settings_example.py /boot/meter-reader/settings.py
 ln -s /boot/meter-reader/settings.py settings.py
 
-# Add cron command to reboot nightly
-crontab -l > cron_bak
-printf "\n*/5 * * * * /home/pi/amr-to-lora/env/bin/python /home/pi/amr-to-lora/watchdog.py\n" >> cron_bak
-crontab cron_bak
-rm cron_bak
+# Add Watchdog script to root crontab
+sudo crontab -l > cron_bak
+sudo printf "\n*/5 * * * * /home/pi/amr-to-lora/env/bin/python /home/pi/amr-to-lora/watchdog.py\n" >> cron_bak
+sudo crontab cron_bak
+sudo rm cron_bak
 
 # Create and enable a systemd service to start the amr-to-lora program
 # at start up.
